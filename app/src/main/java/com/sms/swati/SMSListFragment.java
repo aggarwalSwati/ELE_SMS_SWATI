@@ -37,6 +37,7 @@ public class SMSListFragment extends Fragment {
 		if (null != bundle) {
 			senderId = bundle.getString("sender_id");
 		}
+
 	}
 
 	private void setupRecyclerView() {

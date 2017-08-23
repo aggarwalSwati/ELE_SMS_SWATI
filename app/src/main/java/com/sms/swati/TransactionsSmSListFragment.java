@@ -115,7 +115,7 @@ public class TransactionsSmSListFragment extends Fragment
 			DashboardData data = new DashboardData();
 
 			data.setSenderName(c.getString(
-					c.getColumnIndex(DataBaseHelper.TBL_COL_SENDER_ID)));
+					c.getColumnIndex(DataBaseHelper.TBL_COL_SERVICE)));
 
 			data.setMsgCount(returnCountOfTransactionalMessages(cursor));
 			list.add(data);
