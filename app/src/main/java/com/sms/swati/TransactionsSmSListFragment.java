@@ -69,12 +69,12 @@ public class TransactionsSmSListFragment extends Fragment
 		c.moveToFirst();
 		while (!c.isAfterLast()) {
 			Cursor cursor = dbHelper.readFromSenderId(c.getString(
-					c.getColumnIndex(DataBaseHelper.TBL_COL_SERVICE)));
+					c.getColumnIndex(DataBaseHelper.TBL_COL_SENDER_ID)));
 
 			DashboardData data = new DashboardData();
 
 			data.setSenderName(c.getString(
-					c.getColumnIndex(DataBaseHelper.TBL_COL_SERVICE)));
+					c.getColumnIndex(DataBaseHelper.TBL_COL_SENDER_ID)));
 
 			data.setMsgCount(returnCountOfTransactionalMessages(cursor));
 			list.add(data);

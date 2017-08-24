@@ -8,6 +8,12 @@ import java.util.ArrayList;
 
 public class Constants {
 
+	public static ArrayList<String> getCabSenderList() {
+		return cabSenderList;
+	}
+
+	private static ArrayList<String> cabSenderList;
+
 	public static ArrayList<String> getSenderIdList() {
 		return senderIdList;
 	}
@@ -18,13 +24,18 @@ public class Constants {
 		senderIdList.add("YESBNK");
 		senderIdList.add("CITIBK");
 		senderIdList.add("SBIBNK");
-		senderIdList.add("AXISBK");
+		senderIdList.add("AxisBk");
 		senderIdList.add("CorpBk");
-		senderIdList.add("OLACBS");
-		senderIdList.add("OLACAB");
+
 		senderIdList.add("ICICIB");
-		senderIdList.add("UBERIN");
-		senderIdList.add("MERUCB");
+
+	}
+
+	public static void setCabSenderList() {
+		cabSenderList = new ArrayList<>();
+		cabSenderList.add("UBERIN");
+		cabSenderList.add("MERUCB");
+		cabSenderList.add("OLACAB");
 	}
 
 	public static ArrayList<String> senderIdList = new ArrayList<>();
