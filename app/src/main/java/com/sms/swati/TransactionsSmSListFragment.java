@@ -1,24 +1,21 @@
 package com.sms.swati;
 
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.sms.swati.adapter.SMSDashboardAdapter;
 import com.sms.swati.bean.DashboardData;
 import com.sms.swati.bean.SMSData;
 import com.sms.swati.database.DataBaseHelper;
-import com.sms.swati.utils.Utility;
 
 import java.util.ArrayList;
 
@@ -33,25 +30,13 @@ public class TransactionsSmSListFragment extends Fragment
 	private RecyclerView recyclerView;
 	private SMSDashboardAdapter mSMSDasboardAdapter;
 	private DataBaseHelper dbHelper;
+	TextView noTextFound;
 	ArrayList<SMSData> list = new ArrayList<>();
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		dbHelper = new DataBaseHelper(getActivity());
-		dbHelper.createDatabaseFile();
-		// dbHelper.insertIntoSMSTable(new SMSData("1", "swati", "swati"));
-		if (ContextCompat.checkSelfPermission(getActivity(),
-				"android.permission.READ_SMS") == PackageManager.PERMISSION_GRANTED) {
-			readData(dbHelper.readAllSMS());
-		} else {
-			final int REQUEST_CODE_ASK_PERMISSIONS = 123;
-			ActivityCompat.requestPermissions(getActivity(),
-					new String[]{"android.permission.READ_SMS"},
-					REQUEST_CODE_ASK_PERMISSIONS);
-			readData(dbHelper.readAllSMS());
-		}
-
 	}
 
 	private void setupRecyclerView() {
@@ -71,37 +56,11 @@ public class TransactionsSmSListFragment extends Fragment
 				R.layout.layout_transaction_dashboard, container, false);
 		recyclerView = (RecyclerView) fragmentView
 				.findViewById(R.id.recycler_dashboard);
+		noTextFound=(TextView)fragmentView.findViewById(R.id.noTextFound);
 		setupRecyclerView();
 		return fragmentView;
 	}
 
-	/**
-	 * Read data from Database and updates the List.
-	 **/
-	private void readData(Cursor cursor) {
-		cursor.moveToFirst();
-		dbHelper.deletAllRows();
-		while (!cursor.isAfterLast()) {
-			String _id = cursor.getString(
-					cursor.getColumnIndex(DataBaseHelper.TBL_COL_ID));
-			String body = cursor.getString(
-					cursor.getColumnIndex(DataBaseHelper.TBL_COL_BODY));
-			String sender_id = cursor.getString(
-					cursor.getColumnIndex(DataBaseHelper.TBL_COL_SENDER_ID));
-			SMSData data = new SMSData(body, sender_id);
-			// data.setTransactionType("0");
-			data.setDate(cursor.getString(
-					cursor.getColumnIndex(DataBaseHelper.TBL_COL_DATE)));
-			data.setId(_id);
-			// if (data.getSender_id().contains("YESBNK")) {
-			data = Utility.parsevalues(data);
-			// }
-
-			dbHelper.insertIntoSMSTable(data);
-			cursor.moveToNext();
-		}
-		cursor.close();
-	}
 
 	private void getDashboardData() {
 		Cursor c = dbHelper.readAllSenderCount();
@@ -119,16 +78,17 @@ public class TransactionsSmSListFragment extends Fragment
 
 			data.setMsgCount(returnCountOfTransactionalMessages(cursor));
 			list.add(data);
-			// list.add(c.getString(c.getColumnIndexOrThrow("body"))
-			// .toString());
-			// list.add(c.getString(c.getColumnIndexOrThrow("type"))
-			// .toString());
-			// }
-			// }
 			c.moveToNext();
 		}
 		c.close();
 		mSMSDasboardAdapter.setList(list);
+		if (list!=null&&list.size()>0){
+			noTextFound.setVisibility(View.GONE);
+			recyclerView.setVisibility(View.VISIBLE);
+		}else {
+			noTextFound.setVisibility(View.VISIBLE);
+			recyclerView.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
@@ -170,4 +130,5 @@ public class TransactionsSmSListFragment extends Fragment
 
 		return count;
 	}
+
 }
